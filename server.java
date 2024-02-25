@@ -128,15 +128,15 @@ class ServerRun extends Thread {
 
         int bytesRead;
         while ((bytesRead = inputStream.read(buffer)) != -1) {
-            fileOutputStream.write(buffer, 0, bytesRead); // Write the read chunk to the file
+            fileOutputStream.write(buffer, 0, bytesRead); 
+            fileOutputStream.flush();
+            if (new String(buffer, 0, bytesRead).endsWith("EOF")) {
+                    break;
+                }
         }
 
         fileOutputStream.close();
-
-        String responseFromServer = "File received at server successfully"
-                + " for client " + clientName;
-        System.out.println(responseFromServer);
-        outputStream.writeUTF(responseFromServer);
+        System.out.println("File Transfer Complete");
     }
 
     /**

@@ -218,6 +218,8 @@ class ClientRun {
             outputStream.write(buffer, 0, bytesRead);
             outputStream.flush();
         }
+        outputStream.writeUTF("EOF");
+        outputStream.flush();
         fin.close();
     }catch(Exception e){
         System.out.println(e.getStackTrace());
