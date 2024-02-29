@@ -18,7 +18,7 @@ public class server {
 }
 
 /**
- * Ftp server thread class 
+ * Ftp server thread class
  */
 class ServerRun extends Thread {
     Socket clientSocket;
@@ -128,11 +128,11 @@ class ServerRun extends Thread {
 
         int bytesRead;
         while ((bytesRead = inputStream.read(buffer)) != -1) {
-            fileOutputStream.write(buffer, 0, bytesRead); 
+            fileOutputStream.write(buffer, 0, bytesRead);
             fileOutputStream.flush();
             if (new String(buffer, 0, bytesRead).endsWith("EOF")) {
-                    break;
-                }
+                break;
+            }
         }
 
         fileOutputStream.close();
@@ -153,9 +153,8 @@ class ServerRun extends Thread {
             outputStream.writeUTF("READY");
             System.out.println("Uploading file...");
             readfile(fileToSend);
-            System.out.println("File sent from server for client " + clientName);
-            //outputStream.writeUTF("File received successfully");
-            
+            System.out.println("File sent from server for client ");
+
         }
     }
 

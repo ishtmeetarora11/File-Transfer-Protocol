@@ -1,5 +1,4 @@
 
-
 import java.net.*;
 import java.io.*;
 
@@ -15,8 +14,6 @@ public class client {
                 String command = bufferedReader.readLine();
                 String[] choice = command.split(" ");
                 if (choice[0].compareTo("ftpclient") == 0) {
-                    // Socket serverSocket = new Socket("localhost", 4000);
-                    // String ip = choice[1];
                     if (choice.length != 1) {
                         int port = Integer.parseInt(choice[1]);
                         if (port == 4000) {
@@ -26,16 +23,12 @@ public class client {
                         } else {
                             System.out.println("Wrong port");
                         }
-                    }
-                    else {
+                    } else {
                         System.out.println("No port given");
                     }
                 } else {
                     System.out.println("Type correct command");
                 }
-                // Socket serverSocket = new Socket("localhost", 4000);
-                // CNFTPClientRun client = new CNFTPClientRun(serverSocket);
-                // client.initiateClient();
             } catch (NumberFormatException ex) {
                 System.out.println("Only enter ftpclient and the port");
             } catch (Exception e) {
@@ -82,7 +75,7 @@ class ClientRun {
      */
     private void displayMenu() throws Exception {
         while (true) {
-            System.out.println(">>>>Valid Commands <<<<");
+            System.out.println(" Enter from the below Commands ");
             System.out.println("2. get filename");
             System.out.println("3. upload filename");
             System.out.println("4. exit");
@@ -131,7 +124,7 @@ class ClientRun {
         } else if (msgFromServer.compareTo("READY") == 0) {
             System.out.println("File found on server");
             System.out.println("Receiving File ...");
-            File fileAtClient = new File("new"+fileToReceive);
+            File fileAtClient = new File("new" + fileToReceive);
             if (fileAtClient.exists()) {
                 String option;
                 System.out.println("File already exists at the client." +
@@ -154,17 +147,17 @@ class ClientRun {
      */
     void writeFile(File file) throws Exception {
         FileOutputStream fout = new FileOutputStream(file);
-            byte[] buffer = new byte[1024]; // Buffer to read chunks of data
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                fout.write(buffer, 0, bytesRead);
-                fout.flush();
-                if (new String(buffer, 0, bytesRead).endsWith("EOF")) {
-                    break;
-                }
+        byte[] buffer = new byte[1024]; // Buffer to read chunks of data
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            fout.write(buffer, 0, bytesRead);
+            fout.flush();
+            if (new String(buffer, 0, bytesRead).endsWith("EOF")) {
+                break;
             }
-            fout.close();
-            System.out.println("File transfer complete");
+        }
+        fout.close();
+        System.out.println("File transfer complete");
     }
 
     /**
@@ -200,7 +193,7 @@ class ClientRun {
 
         System.out.println("Uploading File ...");
         readFile(fileToSend);
-        //System.out.println(inputStream.readUTF());
+        System.out.println("File Transfer Complete");
     }
 
     /**
@@ -210,20 +203,21 @@ class ClientRun {
      * @throws Exception
      */
     private void readFile(File fileToSend) {
-       try{ FileInputStream fin = new FileInputStream(fileToSend);
-        byte[] buffer = new byte[1024]; // Adjust buffer size as needed
-        int bytesRead;
-    
-        while ((bytesRead = fin.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, bytesRead);
+        try {
+            FileInputStream fin = new FileInputStream(fileToSend);
+            byte[] buffer = new byte[1024]; // Adjust buffer size as needed
+            int bytesRead;
+
+            while ((bytesRead = fin.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+                outputStream.flush();
+            }
+            outputStream.writeUTF("EOF");
             outputStream.flush();
+            fin.close();
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
         }
-        outputStream.writeUTF("EOF");
-        outputStream.flush();
-        fin.close();
-    }catch(Exception e){
-        System.out.println(e.getStackTrace());
-    }
-    
+
     }
 }
