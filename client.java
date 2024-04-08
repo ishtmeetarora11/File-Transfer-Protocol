@@ -41,7 +41,7 @@ public class client {
 /**
  * Client socket class that will get connected to the server.
  */
-class ClientRun {
+class ClientRun extends Thread{
     Socket clientSocket;
     DataInputStream inputStream;
     DataOutputStream outputStream;

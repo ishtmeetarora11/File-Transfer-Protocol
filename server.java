@@ -13,7 +13,12 @@ public class server {
         System.out.println("Server Started on Port Number 4000");
         System.out.println("The server is running.");
         System.out.println("Waiting for Connection ...");
-        ServerRun ServerRun = new ServerRun(server.accept());
+        int client=0;
+        while(true){
+            ++client;
+            ServerRun ServerRun = new ServerRun(server.accept(),client);
+        }
+        
     }
 }
 
@@ -34,12 +39,13 @@ class ServerRun extends Thread {
      * @param soc        client socket
      * @param _clientNum client id
      */
-    ServerRun(Socket soc) {
+    ServerRun(Socket soc, int clientnum) {
         try {
             clientSocket = soc;
+            this.clientNum=clientnum;
             inputStream = new DataInputStream(clientSocket.getInputStream());
             outputStream = new DataOutputStream(clientSocket.getOutputStream());
-            System.out.println("Client connected ");
+            System.out.println("Client " + clientNum + " connected ");
             start();
 
         } catch (Exception ex) {
@@ -63,7 +69,7 @@ class ServerRun extends Thread {
                             getFileFromClient();
                             continue;
                         case "exit":
-                            System.out.println("client exits");
+                            System.out.println("client "+ clientNum + " exits");
                             continue;
                     }
                 } catch (ClassNotFoundException classNot) {
@@ -73,7 +79,7 @@ class ServerRun extends Thread {
 
             // System.out.println("Total clients connected now:" + clientNum);
         } catch (IOException ioException) {
-            System.out.println("Disconnect with Client ");
+            System.out.println("Disconnect with Client "+ clientNum);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -83,7 +89,7 @@ class ServerRun extends Thread {
                 outputStream.close();
                 clientSocket.close();
             } catch (IOException ioException) {
-                System.out.println("Disconnect with Client ");
+                System.out.println("Disconnect with Client " + clientNum);
             }
         }
     }
@@ -153,7 +159,7 @@ class ServerRun extends Thread {
             outputStream.writeUTF("READY");
             System.out.println("Uploading file...");
             readfile(fileToSend);
-            System.out.println("File sent from server for client ");
+            System.out.println("File sent from server for client "+ clientNum);
 
         }
     }
